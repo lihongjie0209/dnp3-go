@@ -44,6 +44,42 @@ type strictValueFormat struct {
 	timestamp bool
 }
 
+// StrictValueKind identifies the Go representation required by a point.
+type StrictValueKind uint8
+
+const (
+	StrictValueBinary StrictValueKind = iota
+	StrictValueDoubleBinary
+	StrictValueUnsigned
+	StrictValueInt16
+	StrictValueInt32
+	StrictValueFloat32
+	StrictValueFloat64
+	StrictValueOctets
+)
+
+// StrictPointFormat describes a supported measurement payload without
+// exposing the codec's internal representation.
+type StrictPointFormat struct {
+	Kind       StrictValueKind
+	Width      int
+	HasQuality bool
+	HasTime    bool
+}
+
+// DescribeStrictPoint returns the required representation for a supported
+// group and variation.
+func DescribeStrictPoint(group, variation byte) (StrictPointFormat, error) {
+	format, err := strictPointFormat(group, variation)
+	if err != nil {
+		return StrictPointFormat{}, err
+	}
+	return StrictPointFormat{
+		Kind: StrictValueKind(format.kind), Width: format.width,
+		HasQuality: format.quality, HasTime: format.timestamp,
+	}, nil
+}
+
 // EncodeStrictPoint encodes an exact supported measurement payload.
 func EncodeStrictPoint(point StrictPoint) ([]byte, error) {
 	format, err := strictPointFormat(point.Group, point.Variation)

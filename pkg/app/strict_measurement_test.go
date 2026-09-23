@@ -111,3 +111,15 @@ func TestStrictPointRejectsInvalidValues(t *testing.T) {
 		}
 	}
 }
+
+func TestDescribeStrictPoint(t *testing.T) {
+	t.Parallel()
+	format, err := DescribeStrictPoint(32, 7)
+	if err != nil {
+		t.Fatal(err)
+	}
+	want := StrictPointFormat{Kind: StrictValueFloat32, Width: 4, HasQuality: true, HasTime: true}
+	if format != want {
+		t.Fatalf("format=%#v want=%#v", format, want)
+	}
+}
