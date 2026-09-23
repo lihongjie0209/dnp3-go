@@ -60,8 +60,8 @@ func TestMasterLink_FCBToggle(t *testing.T) {
 	defer master.Stop()
 
 	// Initial FCB should be false
-	if master.fcb != false {
-		t.Errorf("Initial FCB should be false, got %v", master.fcb)
+	if master.GetFCB() != false {
+		t.Errorf("Initial FCB should be false, got %v", master.GetFCB())
 	}
 
 	// Simulate sending confirmed data (will timeout but should toggle FCB)
@@ -75,8 +75,8 @@ func TestMasterLink_FCBToggle(t *testing.T) {
 
 	// FCB should have toggled back on error (since send failed)
 	// Actually, on error it toggles back, so should be false again
-	if master.fcb != false {
-		t.Errorf("FCB should be false after failed send, got %v", master.fcb)
+	if master.GetFCB() != false {
+		t.Errorf("FCB should be false after failed send, got %v", master.GetFCB())
 	}
 }
 
@@ -315,14 +315,14 @@ func TestMasterLink_StatusCallback(t *testing.T) {
 	config.Timeout = 50 * time.Millisecond
 	config.MaxRetries = 1
 
-	statusCalled := false
-	var receivedState LinkState
-	var receivedErr error
+	type statusResult struct {
+		state LinkState
+		err   error
+	}
+	status := make(chan statusResult, 1)
 
 	config.StatusCallback = func(state LinkState, err error) {
-		statusCalled = true
-		receivedState = state
-		receivedErr = err
+		status <- statusResult{state: state, err: err}
 	}
 
 	master := NewMasterLink(config)
@@ -338,18 +338,15 @@ func TestMasterLink_StatusCallback(t *testing.T) {
 
 	master.ResetLink()
 
-	// Wait for callback
-	time.Sleep(50 * time.Millisecond)
-
-	if !statusCalled {
-		t.Errorf("Status callback was not called")
-	}
-
-	if receivedState != LinkStateIdle {
-		t.Errorf("Expected state Idle in callback, got %s", receivedState)
-	}
-
-	if receivedErr != nil {
-		t.Errorf("Expected no error in callback, got %v", receivedErr)
+	select {
+	case received := <-status:
+		if received.state != LinkStateIdle {
+			t.Errorf("Expected state Idle in callback, got %s", received.state)
+		}
+		if received.err != nil {
+			t.Errorf("Expected no error in callback, got %v", received.err)
+		}
+	case <-time.After(time.Second):
+		t.Fatal("Status callback was not called")
 	}
 }

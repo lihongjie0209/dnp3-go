@@ -20,18 +20,23 @@ func TestCalculateCRC_KnownVectors(t *testing.T) {
 		{
 			name:     "Single byte 0x05",
 			data:     []byte{0x05},
-			expected: 0x9F15,
+			expected: 0x10D9,
 		},
 		{
 			name:     "DNP3 header start bytes",
 			data:     []byte{0x05, 0x64},
-			expected: 0x7A65,
+			expected: 0xC0F2,
+		},
+		{
+			name:     "CRC standard check",
+			data:     []byte("123456789"),
+			expected: 0xEA82,
 		},
 		{
 			name: "Full DNP3 link header (without CRC)",
 			// 0x05 0x64 (start) + 0x05 (len) + 0xC0 (ctrl) + 0x01 0x00 (dest) + 0x00 0x04 (src)
 			data:     []byte{0x05, 0x64, 0x05, 0xC0, 0x01, 0x00, 0x00, 0x04},
-			expected: 0xE9C7,
+			expected: 0x21E9,
 		},
 		{
 			name:     "All zeros (16 bytes)",
@@ -41,12 +46,12 @@ func TestCalculateCRC_KnownVectors(t *testing.T) {
 		{
 			name:     "All 0xFF (16 bytes)",
 			data:     bytes.Repeat([]byte{0xFF}, 16),
-			expected: 0x0000, // Inverted 0xFFFF
+			expected: 0x0053,
 		},
 		{
 			name:     "Sequential bytes 0x00-0x0F",
 			data:     []byte{0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F},
-			expected: 0xFA3D,
+			expected: 0x10EC,
 		},
 	}
 
@@ -105,15 +110,15 @@ func TestVerifyCRC_ValidCRCs(t *testing.T) {
 		},
 		{
 			name: "Single byte with CRC",
-			data: []byte{0x05, 0x15, 0x9F}, // 0x05 + CRC 0x9F15
+			data: []byte{0x05, 0xD9, 0x10},
 		},
 		{
 			name: "DNP3 start bytes with CRC",
-			data: []byte{0x05, 0x64, 0x65, 0x7A}, // Start bytes + CRC 0x7A65
+			data: []byte{0x05, 0x64, 0xF2, 0xC0},
 		},
 		{
 			name: "Full header with CRC",
-			data: []byte{0x05, 0x64, 0x05, 0xC0, 0x01, 0x00, 0x00, 0x04, 0xC7, 0xE9},
+			data: []byte{0x05, 0x64, 0x05, 0xC0, 0x01, 0x00, 0x00, 0x04, 0xE9, 0x21},
 		},
 	}
 
@@ -211,7 +216,7 @@ func TestAppendCRC(t *testing.T) {
 // TestAppendCRC_LittleEndian verifies CRC is appended in little-endian format
 func TestAppendCRC_LittleEndian(t *testing.T) {
 	data := []byte{0x05}
-	expected := uint16(0x9F15)
+	expected := uint16(0x10D9)
 
 	result := AppendCRC(data)
 
@@ -229,45 +234,45 @@ func TestAppendCRC_LittleEndian(t *testing.T) {
 // TestAddCRCs tests adding CRCs to 16-byte blocks
 func TestAddCRCs(t *testing.T) {
 	tests := []struct {
-		name         string
-		data         []byte
-		expectedLen  int
+		name           string
+		data           []byte
+		expectedLen    int
 		expectedBlocks int
 	}{
 		{
-			name:         "Empty data",
-			data:         []byte{},
-			expectedLen:  0,
+			name:           "Empty data",
+			data:           []byte{},
+			expectedLen:    0,
 			expectedBlocks: 0,
 		},
 		{
-			name:         "Exact 16 bytes (1 block)",
-			data:         make([]byte, 16),
-			expectedLen:  18, // 16 + 2 (CRC)
+			name:           "Exact 16 bytes (1 block)",
+			data:           make([]byte, 16),
+			expectedLen:    18, // 16 + 2 (CRC)
 			expectedBlocks: 1,
 		},
 		{
-			name:         "17 bytes (2 blocks)",
-			data:         make([]byte, 17),
-			expectedLen:  21, // 16 + 2 + 1 + 2
+			name:           "17 bytes (2 blocks)",
+			data:           make([]byte, 17),
+			expectedLen:    21, // 16 + 2 + 1 + 2
 			expectedBlocks: 2,
 		},
 		{
-			name:         "32 bytes (2 full blocks)",
-			data:         make([]byte, 32),
-			expectedLen:  36, // 16 + 2 + 16 + 2
+			name:           "32 bytes (2 full blocks)",
+			data:           make([]byte, 32),
+			expectedLen:    36, // 16 + 2 + 16 + 2
 			expectedBlocks: 2,
 		},
 		{
-			name:         "50 bytes (4 blocks)",
-			data:         make([]byte, 50),
-			expectedLen:  58, // 16 + 2 + 16 + 2 + 16 + 2 + 2 + 2
+			name:           "50 bytes (4 blocks)",
+			data:           make([]byte, 50),
+			expectedLen:    58, // 16 + 2 + 16 + 2 + 16 + 2 + 2 + 2
 			expectedBlocks: 4,
 		},
 		{
-			name:         "1 byte (1 block)",
-			data:         []byte{0x42},
-			expectedLen:  3, // 1 + 2
+			name:           "1 byte (1 block)",
+			data:           []byte{0x42},
+			expectedLen:    3, // 1 + 2
 			expectedBlocks: 1,
 		},
 	}

@@ -28,8 +28,8 @@ type MasterLink struct {
 	statusCallback StatusCallback
 
 	// Channels for communication
-	sendChan     chan []byte  // To physical layer
-	responseChan chan *Frame  // From frame parser
+	sendChan     chan []byte // To physical layer
+	responseChan chan *Frame // From frame parser
 
 	// Synchronization
 	mu     sync.Mutex
@@ -92,6 +92,13 @@ func (m *MasterLink) IsOnline() bool {
 	m.mu.Lock()
 	defer m.mu.Unlock()
 	return m.state == LinkStateIdle || m.state == LinkStateWaitACK
+}
+
+// GetFCB returns the current frame-count bit under the link state lock.
+func (m *MasterLink) GetFCB() bool {
+	m.mu.Lock()
+	defer m.mu.Unlock()
+	return m.fcb
 }
 
 // SetTimeout sets the response timeout
@@ -289,7 +296,7 @@ func (m *MasterLink) OnFrameReceived(frame *Frame) error {
 
 	// Handle unsolicited messages
 	if frame.FunctionCode == FuncUserDataUnconfirmed &&
-	   frame.Dir == DirectionOutstationToMaster {
+		frame.Dir == DirectionOutstationToMaster {
 		// Unsolicited response - pass to upper layer
 		if m.dataCallback != nil {
 			return m.dataCallback(frame.UserData)
@@ -410,7 +417,7 @@ func (m *MasterLink) receiveLoop() {
 		select {
 		case <-m.ctx.Done():
 			return
-		// Additional frame processing can be added here
+			// Additional frame processing can be added here
 		}
 	}
 }
