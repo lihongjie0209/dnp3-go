@@ -72,6 +72,9 @@ func ReadStrictFrame(reader io.Reader) (StrictFrame, error) {
 	return DecodeStrictFrame(wire)
 }
 
+// ValidateStrictControl validates primary/secondary flags and function codes.
+func ValidateStrictControl(control byte) error { return validateStrictControl(control) }
+
 func validateStrictControl(control byte) error {
 	primary := control&CtrlPRM != 0
 	function := control & CtrlFuncMask

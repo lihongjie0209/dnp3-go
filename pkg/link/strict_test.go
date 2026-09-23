@@ -35,7 +35,7 @@ func TestStrictFramePublishedVectorAndOwnership(t *testing.T) {
 
 func TestStrictFrameRejectsControlBoundsAndTrailingData(t *testing.T) {
 	for _, control := range []byte{0xc1, 0xd0, 0xc2, 0xe4, 0xc5, 0x20, 0x02, 0x0a} {
-		if _, err := EncodeStrictFrame(StrictFrame{Control: control}); err == nil {
+		if err := ValidateStrictControl(control); err == nil {
 			t.Fatalf("accepted control %02x", control)
 		}
 	}
