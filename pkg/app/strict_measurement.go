@@ -237,6 +237,11 @@ func StrictVariationHasTime(group, variation byte) bool {
 	return err == nil && format.timestamp
 }
 
+// IsStrictPackedObject reports whether the variation uses packed point bits.
+func IsStrictPackedObject(group, variation byte) bool {
+	return strictPackedObject(group, variation)
+}
+
 // ValidateStrictPointVariation validates a supported measurement group/variation.
 func ValidateStrictPointVariation(group, variation byte) error {
 	_, err := strictPointFormat(group, variation)
