@@ -14,8 +14,9 @@ import (
 	"github.com/lihongjie0209/dnp3-go/pkg/transport"
 )
 
-// ErrStrictSessionBusy reports a concurrent operation on a session.
-var ErrStrictSessionBusy = errors.New("DNP3 wire session already has an active operation")
+// ErrStrictSessionBusy reports a concurrent operation on a session or its
+// composed single-peer link channel.
+var ErrStrictSessionBusy = link.ErrStrictChannelBusy
 
 // Strict is a bounded single-peer DNP3 wire session.
 type Strict struct {
