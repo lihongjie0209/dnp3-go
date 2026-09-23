@@ -393,7 +393,7 @@ func EncodeStrictObjectBlock(block StrictObjectBlock) ([]byte, error) {
 	if uint64(len(points)) != count {
 		return nil, fmt.Errorf("DNP3 object block has %d points, want %d", len(points), count)
 	}
-	if descriptor.sizePrefix {
+	if descriptor.SizePrefix {
 		return nil, errors.New("DNP3 measurement blocks do not support object-size prefixes")
 	}
 	result, err := EncodeStrictObjectHeader(header)
@@ -407,7 +407,7 @@ func EncodeStrictObjectBlock(block StrictObjectBlock) ([]byte, error) {
 		return result, nil
 	}
 	if strictPackedObject(header.Group, header.Variation) {
-		if descriptor.prefixWidth != 0 {
+		if descriptor.PrefixWidth != 0 {
 			return nil, errors.New("DNP3 packed objects may not use index prefixes")
 		}
 		packed, packErr := encodeStrictPackedPoints(header, points)
@@ -418,15 +418,15 @@ func EncodeStrictObjectBlock(block StrictObjectBlock) ([]byte, error) {
 			return nil, fmt.Errorf("DNP3 point %d group or variation differs from its header", index)
 		}
 		expected := uint32(index)
-		if descriptor.kind == strictRangeStartStop {
+		if descriptor.Kind == StrictRangeStartStop {
 			expected = header.Start + uint32(index)
 		}
-		if descriptor.prefixWidth == 0 {
+		if descriptor.PrefixWidth == 0 {
 			if point.Index != expected {
 				return nil, fmt.Errorf("DNP3 point %d index is %d, want %d", index, point.Index, expected)
 			}
 		} else {
-			result, err = appendStrictUnsigned(result, point.Index, descriptor.prefixWidth)
+			result, err = appendStrictUnsigned(result, point.Index, descriptor.PrefixWidth)
 			if err != nil {
 				return nil, fmt.Errorf("encoding DNP3 point %d index: %w", index, err)
 			}
@@ -453,7 +453,7 @@ func DecodeStrictObjectBlock(data []byte, maximumPoints int) (StrictObjectBlock,
 	if err != nil {
 		return StrictObjectBlock{}, 0, err
 	}
-	if descriptor.sizePrefix {
+	if descriptor.SizePrefix {
 		return StrictObjectBlock{}, 0, errors.New("DNP3 measurement blocks do not support object-size prefixes")
 	}
 	count, err := strictHeaderCount(header, descriptor)
@@ -470,7 +470,7 @@ func DecodeStrictObjectBlock(data []byte, maximumPoints int) (StrictObjectBlock,
 		return StrictObjectBlock{}, 0, errors.New("DNP3 object block exceeds point limit")
 	}
 	if strictPackedObject(header.Group, header.Variation) {
-		if descriptor.prefixWidth != 0 {
+		if descriptor.PrefixWidth != 0 {
 			return StrictObjectBlock{}, 0, errors.New("DNP3 packed objects may not use index prefixes")
 		}
 		points, consumed, decodeErr := decodeStrictPackedPoints(header, data[offset:], int(count))
@@ -479,14 +479,14 @@ func DecodeStrictObjectBlock(data []byte, maximumPoints int) (StrictObjectBlock,
 	points := make([]StrictPoint, 0, int(count))
 	for index := 0; index < int(count); index++ {
 		pointIndex := uint32(index)
-		if descriptor.kind == strictRangeStartStop {
+		if descriptor.Kind == StrictRangeStartStop {
 			pointIndex = header.Start + uint32(index)
-		} else if descriptor.prefixWidth != 0 {
-			if len(data)-offset < descriptor.prefixWidth {
+		} else if descriptor.PrefixWidth != 0 {
+			if len(data)-offset < descriptor.PrefixWidth {
 				return StrictObjectBlock{}, 0, errors.New("truncated DNP3 point index prefix")
 			}
-			pointIndex = readStrictUnsigned(data[offset:], descriptor.prefixWidth)
-			offset += descriptor.prefixWidth
+			pointIndex = readStrictUnsigned(data[offset:], descriptor.PrefixWidth)
+			offset += descriptor.PrefixWidth
 		}
 		point, consumed, decodeErr := DecodeStrictPoint(header.Group, header.Variation, data[offset:])
 		if decodeErr != nil {
@@ -524,16 +524,16 @@ func DecodeStrictObjectBlocks(data []byte, maximumPoints, maximumBlocks int) ([]
 	return blocks, nil
 }
 
-func strictHeaderCount(header StrictObjectHeader, descriptor strictQualifier) (uint64, error) {
-	switch descriptor.kind {
-	case strictRangeAll:
+func strictHeaderCount(header StrictObjectHeader, descriptor StrictQualifier) (uint64, error) {
+	switch descriptor.Kind {
+	case StrictRangeAll:
 		return 0, nil
-	case strictRangeStartStop:
+	case StrictRangeStartStop:
 		if header.Stop < header.Start {
 			return 0, errors.New("DNP3 object stop index is below start index")
 		}
 		return uint64(header.Stop) - uint64(header.Start) + 1, nil
-	case strictRangeCount:
+	case StrictRangeCount:
 		if header.Count == 0 {
 			return 0, errors.New("DNP3 object count is zero")
 		}

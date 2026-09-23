@@ -16,19 +16,19 @@ type StrictObjectHeader struct {
 	Count     uint32
 }
 
-type strictRangeKind uint8
+type StrictRangeKind uint8
 
 const (
-	strictRangeStartStop strictRangeKind = iota
-	strictRangeAll
-	strictRangeCount
+	StrictRangeStartStop StrictRangeKind = iota
+	StrictRangeAll
+	StrictRangeCount
 )
 
-type strictQualifier struct {
-	kind        strictRangeKind
-	rangeWidth  int
-	prefixWidth int
-	sizePrefix  bool
+type StrictQualifier struct {
+	Kind        StrictRangeKind
+	RangeWidth  int
+	PrefixWidth int
+	SizePrefix  bool
 }
 
 func EncodeStrictObjectHeader(header StrictObjectHeader) ([]byte, error) {
@@ -37,27 +37,27 @@ func EncodeStrictObjectHeader(header StrictObjectHeader) ([]byte, error) {
 		return nil, err
 	}
 	result := []byte{header.Group, header.Variation, header.Qualifier}
-	switch descriptor.kind {
-	case strictRangeAll:
+	switch descriptor.Kind {
+	case StrictRangeAll:
 		return result, nil
-	case strictRangeStartStop:
+	case StrictRangeStartStop:
 		if header.Stop < header.Start {
 			return nil, errors.New("DNP3 object stop index is below start index")
 		}
-		result, err = appendStrictUnsigned(result, header.Start, descriptor.rangeWidth)
+		result, err = appendStrictUnsigned(result, header.Start, descriptor.RangeWidth)
 		if err != nil {
 			return nil, fmt.Errorf("encoding DNP3 object start: %w", err)
 		}
-		result, err = appendStrictUnsigned(result, header.Stop, descriptor.rangeWidth)
+		result, err = appendStrictUnsigned(result, header.Stop, descriptor.RangeWidth)
 		if err != nil {
 			return nil, fmt.Errorf("encoding DNP3 object stop: %w", err)
 		}
 		return result, nil
-	case strictRangeCount:
+	case StrictRangeCount:
 		if header.Count == 0 {
 			return nil, errors.New("DNP3 object count is zero")
 		}
-		result, err = appendStrictUnsigned(result, header.Count, descriptor.rangeWidth)
+		result, err = appendStrictUnsigned(result, header.Count, descriptor.RangeWidth)
 		if err != nil {
 			return nil, fmt.Errorf("encoding DNP3 object count: %w", err)
 		}
@@ -77,46 +77,46 @@ func DecodeStrictObjectHeader(data []byte) (StrictObjectHeader, int, error) {
 		return StrictObjectHeader{}, 0, err
 	}
 	offset := 3
-	switch descriptor.kind {
-	case strictRangeAll:
+	switch descriptor.Kind {
+	case StrictRangeAll:
 		return header, offset, nil
-	case strictRangeStartStop:
-		if len(data)-offset < 2*descriptor.rangeWidth {
+	case StrictRangeStartStop:
+		if len(data)-offset < 2*descriptor.RangeWidth {
 			return StrictObjectHeader{}, 0, errors.New("truncated DNP3 object range")
 		}
-		header.Start = readStrictUnsigned(data[offset:], descriptor.rangeWidth)
-		offset += descriptor.rangeWidth
-		header.Stop = readStrictUnsigned(data[offset:], descriptor.rangeWidth)
-		offset += descriptor.rangeWidth
+		header.Start = readStrictUnsigned(data[offset:], descriptor.RangeWidth)
+		offset += descriptor.RangeWidth
+		header.Stop = readStrictUnsigned(data[offset:], descriptor.RangeWidth)
+		offset += descriptor.RangeWidth
 		if header.Stop < header.Start {
 			return StrictObjectHeader{}, 0, errors.New("DNP3 object stop index is below start index")
 		}
 		return header, offset, nil
-	case strictRangeCount:
-		if len(data)-offset < descriptor.rangeWidth {
+	case StrictRangeCount:
+		if len(data)-offset < descriptor.RangeWidth {
 			return StrictObjectHeader{}, 0, errors.New("truncated DNP3 object count")
 		}
-		header.Count = readStrictUnsigned(data[offset:], descriptor.rangeWidth)
+		header.Count = readStrictUnsigned(data[offset:], descriptor.RangeWidth)
 		if header.Count == 0 {
 			return StrictObjectHeader{}, 0, errors.New("DNP3 object count is zero")
 		}
-		offset += descriptor.rangeWidth
+		offset += descriptor.RangeWidth
 		return header, offset, nil
 	default:
 		return StrictObjectHeader{}, 0, errors.New("unsupported DNP3 qualifier range")
 	}
 }
 
-func decodeStrictQualifier(qualifier byte) (strictQualifier, error) {
+func decodeStrictQualifier(qualifier byte) (StrictQualifier, error) {
 	prefixCode, rangeCode := qualifier>>4, qualifier&0x0f
-	descriptor := strictQualifier{}
+	descriptor := StrictQualifier{}
 	switch prefixCode {
 	case 0:
 	case 1, 2, 3:
-		descriptor.prefixWidth = 1 << (prefixCode - 1)
+		descriptor.PrefixWidth = 1 << (prefixCode - 1)
 	case 4, 5, 6:
-		descriptor.prefixWidth = 1 << (prefixCode - 4)
-		descriptor.sizePrefix = true
+		descriptor.PrefixWidth = 1 << (prefixCode - 4)
+		descriptor.SizePrefix = true
 	default:
 		return descriptor, fmt.Errorf("unsupported DNP3 qualifier prefix code %d", prefixCode)
 	}
@@ -125,20 +125,43 @@ func decodeStrictQualifier(qualifier byte) (strictQualifier, error) {
 		if prefixCode != 0 {
 			return descriptor, errors.New("DNP3 start-stop qualifier may not use a prefix")
 		}
-		descriptor.kind = strictRangeStartStop
-		descriptor.rangeWidth = 1 << rangeCode
+		descriptor.Kind = StrictRangeStartStop
+		descriptor.RangeWidth = 1 << rangeCode
 	case 6:
 		if prefixCode != 0 {
 			return descriptor, errors.New("DNP3 all-objects qualifier may not use a prefix")
 		}
-		descriptor.kind = strictRangeAll
+		descriptor.Kind = StrictRangeAll
 	case 7, 8, 9:
-		descriptor.kind = strictRangeCount
-		descriptor.rangeWidth = 1 << (rangeCode - 7)
+		descriptor.Kind = StrictRangeCount
+		descriptor.RangeWidth = 1 << (rangeCode - 7)
 	default:
 		return descriptor, fmt.Errorf("unsupported DNP3 qualifier range code %d", rangeCode)
 	}
 	return descriptor, nil
+}
+
+// DecodeStrictQualifier validates a DNP3 qualifier and returns its range and
+// prefix representation.
+func DecodeStrictQualifier(qualifier byte) (StrictQualifier, error) {
+	return decodeStrictQualifier(qualifier)
+}
+
+// AppendStrictUnsigned appends a bounded little-endian qualifier integer.
+func AppendStrictUnsigned(destination []byte, value uint32, width int) ([]byte, error) {
+	return appendStrictUnsigned(destination, value, width)
+}
+
+// DecodeStrictUnsigned decodes a complete-width little-endian qualifier
+// integer.
+func DecodeStrictUnsigned(data []byte, width int) (uint32, error) {
+	if width != 1 && width != 2 && width != 4 {
+		return 0, errors.New("unsupported DNP3 integer width")
+	}
+	if len(data) < width {
+		return 0, errors.New("truncated DNP3 integer")
+	}
+	return readStrictUnsigned(data, width), nil
 }
 
 func appendStrictUnsigned(destination []byte, value uint32, width int) ([]byte, error) {
