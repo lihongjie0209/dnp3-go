@@ -231,7 +231,8 @@ func DecodeStrictPoint(group, variation byte, data []byte) (StrictPoint, int, er
 	return point, offset, nil
 }
 
-// StrictVariationHasTime reports whether the supported variation carries CP56 time.
+// StrictVariationHasTime reports whether the supported variation carries a
+// 48-bit DNP3 absolute timestamp.
 func StrictVariationHasTime(group, variation byte) bool {
 	format, err := strictPointFormat(group, variation)
 	return err == nil && format.timestamp
