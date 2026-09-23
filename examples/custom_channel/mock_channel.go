@@ -5,7 +5,7 @@ import (
 	"errors"
 	"sync"
 
-	"avaneesh/dnp3-go/pkg/channel"
+	"github.com/lihongjie0209/dnp3-go/pkg/channel"
 )
 
 // MockChannel is an example implementation of PhysicalChannel

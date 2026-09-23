@@ -1,6 +1,6 @@
 package app
 
-import "avaneesh/dnp3-go/pkg/types"
+import "github.com/lihongjie0209/dnp3-go/pkg/types"
 
 // Re-export IIN type from types package for convenience
 type IIN = types.IIN

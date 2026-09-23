@@ -4,11 +4,11 @@ import (
 	"errors"
 	"time"
 
-	"avaneesh/dnp3-go/pkg/app"
-	"avaneesh/dnp3-go/pkg/channel"
-	"avaneesh/dnp3-go/pkg/internal/logger"
-	"avaneesh/dnp3-go/pkg/master"
-	"avaneesh/dnp3-go/pkg/types"
+	"github.com/lihongjie0209/dnp3-go/pkg/app"
+	"github.com/lihongjie0209/dnp3-go/pkg/channel"
+	"github.com/lihongjie0209/dnp3-go/pkg/internal/logger"
+	"github.com/lihongjie0209/dnp3-go/pkg/master"
+	"github.com/lihongjie0209/dnp3-go/pkg/types"
 )
 
 // newMaster creates a new master instance

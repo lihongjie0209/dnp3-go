@@ -4,8 +4,8 @@ import (
 	"errors"
 	"time"
 
-	"avaneesh/dnp3-go/pkg/app"
-	"avaneesh/dnp3-go/pkg/types"
+	"github.com/lihongjie0209/dnp3-go/pkg/app"
+	"github.com/lihongjie0209/dnp3-go/pkg/types"
 )
 
 // Scan operations

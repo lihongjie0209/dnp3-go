@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"sync"
 
-	"avaneesh/dnp3-go/pkg/internal/logger"
-	"avaneesh/dnp3-go/pkg/link"
+	"github.com/lihongjie0209/dnp3-go/pkg/internal/logger"
+	"github.com/lihongjie0209/dnp3-go/pkg/link"
 )
 
 var (

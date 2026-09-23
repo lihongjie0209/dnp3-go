@@ -1,3 +1,5 @@
+//go:build ignore
+
 package main
 
 import (
@@ -8,9 +10,9 @@ import (
 	"strings"
 	"time"
 
-	"avaneesh/dnp3-go/pkg/dnp3"
-	"avaneesh/dnp3-go/pkg/types"
-	"avaneesh/dnp3-go/pkg/channel"
+	"github.com/lihongjie0209/dnp3-go/pkg/channel"
+	"github.com/lihongjie0209/dnp3-go/pkg/dnp3"
+	"github.com/lihongjie0209/dnp3-go/pkg/types"
 )
 
 // Example showing how to use the DNP3 library
@@ -162,7 +164,6 @@ func AddUpdates(builder *dnp3.UpdateBuilder, state *State, arguments string) {
 	}
 }
 
-
 func exampleOutstation() {
 	// Create manager
 	manager := dnp3.NewManager()
@@ -172,7 +173,7 @@ func exampleOutstation() {
 	// Create TCP channel (server mode - listens for incoming connections)
 	tcpConfig := channel.TCPChannelConfig{
 		Address:      "127.0.0.1:22150", // Listen on all interfaces
-		IsServer:     true,             // Server mode
+		IsServer:     true,              // Server mode
 		ReadTimeout:  30 * time.Second,
 		WriteTimeout: 10 * time.Second,
 	}
@@ -183,7 +184,6 @@ func exampleOutstation() {
 	}
 
 	fmt.Printf("TCP Server listening on %s\n", tcpConfig.Address)
-
 
 	// Add channel
 	channel, err := manager.AddChannel("channel1", tcpChannel)

@@ -1,9 +1,9 @@
 package master
 
 import (
-	"avaneesh/dnp3-go/pkg/channel"
-	"avaneesh/dnp3-go/pkg/link"
-	"avaneesh/dnp3-go/pkg/transport"
+	"github.com/lihongjie0209/dnp3-go/pkg/channel"
+	"github.com/lihongjie0209/dnp3-go/pkg/link"
+	"github.com/lihongjie0209/dnp3-go/pkg/transport"
 )
 
 // session connects the master to a channel

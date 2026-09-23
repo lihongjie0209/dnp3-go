@@ -1,3 +1,5 @@
+//go:build ignore
+
 package main
 
 import (
@@ -8,9 +10,9 @@ import (
 	"strings"
 	"time"
 
-	"avaneesh/dnp3-go/pkg/channel"
-	"avaneesh/dnp3-go/pkg/dnp3"
-	"avaneesh/dnp3-go/pkg/types"
+	"github.com/lihongjie0209/dnp3-go/pkg/channel"
+	"github.com/lihongjie0209/dnp3-go/pkg/dnp3"
+	"github.com/lihongjie0209/dnp3-go/pkg/types"
 )
 
 // MyOutstationCallbacks implements the outstation callback interface
@@ -288,8 +290,8 @@ func main() {
 	// Create outstation configuration
 	config := dnp3.DefaultOutstationConfig()
 	config.ID = "test-outstation"
-	config.LocalAddress = 10   // Outstation address
-	config.RemoteAddress = 1   // Master address
+	config.LocalAddress = 10 // Outstation address
+	config.RemoteAddress = 1 // Master address
 	config.Database = dbConfig
 	config.AllowUnsolicited = true
 	config.MaxBinaryEvents = 100

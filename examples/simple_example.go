@@ -1,3 +1,5 @@
+//go:build ignore
+
 package main
 
 import (
@@ -5,9 +7,9 @@ import (
 	"fmt"
 	"time"
 
-	"avaneesh/dnp3-go/pkg/dnp3"
-	"avaneesh/dnp3-go/pkg/types"
-	"avaneesh/dnp3-go/pkg/channel"
+	"github.com/lihongjie0209/dnp3-go/pkg/channel"
+	"github.com/lihongjie0209/dnp3-go/pkg/dnp3"
+	"github.com/lihongjie0209/dnp3-go/pkg/types"
 )
 
 // Example showing how to use the DNP3 library
@@ -52,16 +54,20 @@ func (c *MyMasterCallbacks) ProcessBinary(info dnp3.HeaderInfo, values []types.I
 	}
 }
 
-func (c *MyMasterCallbacks) ProcessDoubleBitBinary(info dnp3.HeaderInfo, values []types.IndexedDoubleBitBinary) {}
+func (c *MyMasterCallbacks) ProcessDoubleBitBinary(info dnp3.HeaderInfo, values []types.IndexedDoubleBitBinary) {
+}
 func (c *MyMasterCallbacks) ProcessAnalog(info dnp3.HeaderInfo, values []types.IndexedAnalog) {
 	for _, v := range values {
 		fmt.Printf("Analog[%d]: %.2f\n", v.Index, v.Value.Value)
 	}
 }
 func (c *MyMasterCallbacks) ProcessCounter(info dnp3.HeaderInfo, values []types.IndexedCounter) {}
-func (c *MyMasterCallbacks) ProcessFrozenCounter(info dnp3.HeaderInfo, values []types.IndexedFrozenCounter) {}
-func (c *MyMasterCallbacks) ProcessBinaryOutputStatus(info dnp3.HeaderInfo, values []types.IndexedBinaryOutputStatus) {}
-func (c *MyMasterCallbacks) ProcessAnalogOutputStatus(info dnp3.HeaderInfo, values []types.IndexedAnalogOutputStatus) {}
+func (c *MyMasterCallbacks) ProcessFrozenCounter(info dnp3.HeaderInfo, values []types.IndexedFrozenCounter) {
+}
+func (c *MyMasterCallbacks) ProcessBinaryOutputStatus(info dnp3.HeaderInfo, values []types.IndexedBinaryOutputStatus) {
+}
+func (c *MyMasterCallbacks) ProcessAnalogOutputStatus(info dnp3.HeaderInfo, values []types.IndexedAnalogOutputStatus) {
+}
 
 func (c *MyMasterCallbacks) OnReceiveIIN(iin types.IIN) {
 	fmt.Printf("IIN: [%02X,%02X]\n", iin.IIN1, iin.IIN2)

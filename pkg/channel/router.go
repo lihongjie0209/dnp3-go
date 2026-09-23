@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"sync"
 
-	"avaneesh/dnp3-go/pkg/link"
+	"github.com/lihongjie0209/dnp3-go/pkg/link"
 )
 
 // Session represents a master or outstation session on a channel

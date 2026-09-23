@@ -1,7 +1,7 @@
 package outstation
 
 import (
-	"avaneesh/dnp3-go/pkg/types"
+	"github.com/lihongjie0209/dnp3-go/pkg/types"
 )
 
 // UpdateBuilder builds atomic measurement updates

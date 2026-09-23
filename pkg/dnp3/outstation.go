@@ -3,7 +3,7 @@ package dnp3
 import (
 	"time"
 
-	"avaneesh/dnp3-go/pkg/types"
+	"github.com/lihongjie0209/dnp3-go/pkg/types"
 )
 
 // Outstation represents a DNP3 outstation (server) session
@@ -116,10 +116,10 @@ type OutstationConfig struct {
 	Database DatabaseConfig
 
 	// Event buffers
-	MaxBinaryEvents       uint // Per class
-	MaxAnalogEvents       uint
-	MaxCounterEvents      uint
-	MaxDoubleBitEvents    uint
+	MaxBinaryEvents    uint // Per class
+	MaxAnalogEvents    uint
+	MaxCounterEvents   uint
+	MaxDoubleBitEvents uint
 
 	// Behavior
 	AllowUnsolicited      bool          // Allow unsolicited responses

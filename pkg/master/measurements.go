@@ -1,8 +1,8 @@
 package master
 
 import (
-	"avaneesh/dnp3-go/pkg/app"
-	"avaneesh/dnp3-go/pkg/types"
+	"github.com/lihongjie0209/dnp3-go/pkg/app"
+	"github.com/lihongjie0209/dnp3-go/pkg/types"
 )
 
 // processMeasurements processes measurement data from response

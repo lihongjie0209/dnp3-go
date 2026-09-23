@@ -1,14 +1,15 @@
+//go:build ignore
+
 package main
 
 import (
 	"fmt"
 	"time"
 
-	"avaneesh/dnp3-go/pkg/channel"
-	"avaneesh/dnp3-go/pkg/dnp3"
-	"avaneesh/dnp3-go/pkg/types"
+	"github.com/lihongjie0209/dnp3-go/pkg/channel"
+	"github.com/lihongjie0209/dnp3-go/pkg/dnp3"
+	"github.com/lihongjie0209/dnp3-go/pkg/types"
 )
-
 
 // Example demonstrating TCP channel usage with DNP3
 
@@ -33,7 +34,7 @@ func runTCPMaster() error {
 	// Create TCP channel (client mode - connects to remote outstation)
 	tcpConfig := channel.TCPChannelConfig{
 		Address:        "127.0.0.1:20000", // Connect to outstation
-		IsServer:       false,              // Client mode
+		IsServer:       false,             // Client mode
 		ReconnectDelay: 5 * time.Second,
 		ReadTimeout:    30 * time.Second,
 		WriteTimeout:   10 * time.Second,
@@ -47,24 +48,23 @@ func runTCPMaster() error {
 
 	fmt.Printf("TCP Client connected to %s\n", tcpConfig.Address)
 
-
 	// Create DNP3 manager
 	// Create manager
 	manager := dnp3.NewManager()
 	defer manager.Shutdown()
 
 	// Add channel
-    manager.AddChannel("channel1", tcpChannel)
+	manager.AddChannel("channel1", tcpChannel)
 
 	// Configure master
 	masterConfig := dnp3.DefaultMasterConfig()
 	masterConfig.ID = "TCPMaster"
-	masterConfig.LocalAddress = 1  // Master address
+	masterConfig.LocalAddress = 1   // Master address
 	masterConfig.RemoteAddress = 10 // Outstation address
 	masterConfig.ResponseTimeout = 5 * time.Second
 
 	// Create master callbacks
-	callbacks := &MasterCallbacks{ }
+	callbacks := &MasterCallbacks{}
 
 	// Create master
 	master, err := manager.CreateMaster(masterConfig, callbacks, dnp3Channel)
@@ -113,11 +113,11 @@ func runTCPMaster() error {
 	return nil
 }
 
-func runTCPOutstation( ) error {
+func runTCPOutstation() error {
 	// Create TCP channel (server mode - listens for incoming connections)
 	tcpConfig := channel.TCPChannelConfig{
 		Address:      "0.0.0.0:20000", // Listen on all interfaces
-		IsServer:     true,             // Server mode
+		IsServer:     true,            // Server mode
 		ReadTimeout:  30 * time.Second,
 		WriteTimeout: 10 * time.Second,
 	}
@@ -143,7 +143,7 @@ func runTCPOutstation( ) error {
 	outstationConfig := dnp3.DefaultOutstationConfig()
 	outstationConfig.ID = "TCPOutstation"
 	outstationConfig.LocalAddress = 10 // Outstation address
-	outstationConfig.RemoteAddress = 1  // Master address
+	outstationConfig.RemoteAddress = 1 // Master address
 
 	// Configure database with some points
 	outstationConfig.Database = dnp3.DatabaseConfig{
@@ -158,7 +158,7 @@ func runTCPOutstation( ) error {
 	}
 
 	// Create outstation callbacks
-	callbacks := &OutstationCallbacks{ }
+	callbacks := &OutstationCallbacks{}
 
 	// Create outstation
 	outstation, err := manager.CreateOutstation(outstationConfig, callbacks, dnp3Channel)
@@ -209,7 +209,6 @@ func runTCPOutstation( ) error {
 
 // MasterCallbacks implements dnp3.MasterCallbacks
 type MasterCallbacks struct {
-	
 }
 
 func (cb *MasterCallbacks) OnBeginFragment(info dnp3.ResponseInfo) {
@@ -272,7 +271,6 @@ func (cb *MasterCallbacks) GetTime() time.Time {
 
 // OutstationCallbacks implements dnp3.OutstationCallbacks
 type OutstationCallbacks struct {
-	
 }
 
 func (cb *OutstationCallbacks) Begin() {

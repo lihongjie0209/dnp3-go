@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"sync"
 
-	"avaneesh/dnp3-go/pkg/channel"
-	"avaneesh/dnp3-go/pkg/internal/logger"
+	"github.com/lihongjie0209/dnp3-go/pkg/channel"
+	"github.com/lihongjie0209/dnp3-go/pkg/internal/logger"
 )
 
 // Manager is the root object for DNP3 operations

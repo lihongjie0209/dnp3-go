@@ -7,11 +7,11 @@ import (
 	"sync"
 	"time"
 
-	"avaneesh/dnp3-go/pkg/app"
-	"avaneesh/dnp3-go/pkg/channel"
-	"avaneesh/dnp3-go/pkg/internal/logger"
-	"avaneesh/dnp3-go/pkg/internal/queue"
-	"avaneesh/dnp3-go/pkg/types"
+	"github.com/lihongjie0209/dnp3-go/pkg/app"
+	"github.com/lihongjie0209/dnp3-go/pkg/channel"
+	"github.com/lihongjie0209/dnp3-go/pkg/internal/logger"
+	"github.com/lihongjie0209/dnp3-go/pkg/internal/queue"
+	"github.com/lihongjie0209/dnp3-go/pkg/types"
 )
 
 var (
@@ -32,25 +32,25 @@ type master struct {
 	session *session
 
 	// Task management
-	taskQueue    *queue.PriorityQueue
-	scans        map[int]*PeriodicScan
-	nextScanID   int
-	scansMu      sync.RWMutex
+	taskQueue  *queue.PriorityQueue
+	scans      map[int]*PeriodicScan
+	nextScanID int
+	scansMu    sync.RWMutex
 
 	// State
-	enabled      bool
-	seqCounter   *app.SequenceCounter
-	lastIIN      types.IIN
-	stateMu      sync.RWMutex
+	enabled    bool
+	seqCounter *app.SequenceCounter
+	lastIIN    types.IIN
+	stateMu    sync.RWMutex
 
 	// Concurrency
-	ctx          context.Context
-	cancel       context.CancelFunc
-	wg           sync.WaitGroup
+	ctx    context.Context
+	cancel context.CancelFunc
+	wg     sync.WaitGroup
 
 	// Response handling
-	pendingResp  chan *app.APDU
-	pendingMu    sync.Mutex
+	pendingResp chan *app.APDU
+	pendingMu   sync.Mutex
 }
 
 // New creates a new master

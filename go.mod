@@ -1,4 +1,4 @@
-module avaneesh/dnp3-go
+module github.com/lihongjie0209/dnp3-go
 
 go 1.25.5
 

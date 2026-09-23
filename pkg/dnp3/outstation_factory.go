@@ -3,10 +3,10 @@ package dnp3
 import (
 	"errors"
 
-	"avaneesh/dnp3-go/pkg/channel"
-	"avaneesh/dnp3-go/pkg/internal/logger"
-	"avaneesh/dnp3-go/pkg/outstation"
-	"avaneesh/dnp3-go/pkg/types"
+	"github.com/lihongjie0209/dnp3-go/pkg/channel"
+	"github.com/lihongjie0209/dnp3-go/pkg/internal/logger"
+	"github.com/lihongjie0209/dnp3-go/pkg/outstation"
+	"github.com/lihongjie0209/dnp3-go/pkg/types"
 )
 
 // newOutstation creates a new outstation instance

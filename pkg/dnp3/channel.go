@@ -1,7 +1,7 @@
 package dnp3
 
 import (
-	"avaneesh/dnp3-go/pkg/channel"
+	"github.com/lihongjie0209/dnp3-go/pkg/channel"
 )
 
 // Channel is the public interface for a DNP3 channel
@@ -21,16 +21,16 @@ type Channel interface {
 
 // ChannelStatistics provides channel-level statistics
 type ChannelStatistics struct {
-	LinkFramesTx      uint64 // Link frames transmitted
-	LinkFramesRx      uint64 // Link frames received
-	BadLinkFrames     uint64 // Bad link frames
-	CRCErrors         uint64 // CRC errors
-	TransportTx       uint64 // Transport segments transmitted
-	TransportRx       uint64 // Transport segments received
-	TransportErrors   uint64 // Transport errors
-	ActiveSessions    uint64 // Number of active sessions
-	PhysicalBytesTx   uint64 // Physical bytes transmitted
-	PhysicalBytesRx   uint64 // Physical bytes received
+	LinkFramesTx    uint64 // Link frames transmitted
+	LinkFramesRx    uint64 // Link frames received
+	BadLinkFrames   uint64 // Bad link frames
+	CRCErrors       uint64 // CRC errors
+	TransportTx     uint64 // Transport segments transmitted
+	TransportRx     uint64 // Transport segments received
+	TransportErrors uint64 // Transport errors
+	ActiveSessions  uint64 // Number of active sessions
+	PhysicalBytesTx uint64 // Physical bytes transmitted
+	PhysicalBytesRx uint64 // Physical bytes received
 }
 
 // channelImpl implements the Channel interface

@@ -7,12 +7,12 @@ import (
 	"sync"
 	"time"
 
-	"avaneesh/dnp3-go/pkg/app"
-	"avaneesh/dnp3-go/pkg/channel"
-	"avaneesh/dnp3-go/pkg/internal/logger"
-	"avaneesh/dnp3-go/pkg/link"
-	"avaneesh/dnp3-go/pkg/transport"
-	"avaneesh/dnp3-go/pkg/types"
+	"github.com/lihongjie0209/dnp3-go/pkg/app"
+	"github.com/lihongjie0209/dnp3-go/pkg/channel"
+	"github.com/lihongjie0209/dnp3-go/pkg/internal/logger"
+	"github.com/lihongjie0209/dnp3-go/pkg/link"
+	"github.com/lihongjie0209/dnp3-go/pkg/transport"
+	"github.com/lihongjie0209/dnp3-go/pkg/types"
 )
 
 var (
@@ -33,10 +33,10 @@ type outstation struct {
 	session *session
 
 	// State
-	enabled           bool
-	seqCounter        *app.SequenceCounter
-	unsolicitedMask   app.ClassField // Classes enabled for unsolicited responses
-	stateMu           sync.RWMutex
+	enabled         bool
+	seqCounter      *app.SequenceCounter
+	unsolicitedMask app.ClassField // Classes enabled for unsolicited responses
+	stateMu         sync.RWMutex
 
 	// Concurrency
 	ctx        context.Context

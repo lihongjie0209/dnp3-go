@@ -3,7 +3,7 @@ package outstation
 import (
 	"time"
 
-	"avaneesh/dnp3-go/pkg/types"
+	"github.com/lihongjie0209/dnp3-go/pkg/types"
 )
 
 // OutstationConfig configures an outstation session
@@ -130,7 +130,7 @@ const (
 type EventMode int
 
 const (
-	EventModeDetect   EventMode = iota
+	EventModeDetect EventMode = iota
 	EventModeForce
 	EventModeSuppress
 )

@@ -1,13 +1,15 @@
+//go:build ignore
+
 package main
 
 import (
 	"fmt"
 	"time"
 
-	"avaneesh/dnp3-go/pkg/dnp3"
-	"avaneesh/dnp3-go/pkg/types"
-	"avaneesh/dnp3-go/pkg/channel"
-	"avaneesh/dnp3-go/pkg/app"
+	"github.com/lihongjie0209/dnp3-go/pkg/app"
+	"github.com/lihongjie0209/dnp3-go/pkg/channel"
+	"github.com/lihongjie0209/dnp3-go/pkg/dnp3"
+	"github.com/lihongjie0209/dnp3-go/pkg/types"
 )
 
 // Master callbacks implementation
@@ -138,7 +140,7 @@ func main() {
 	// Create TCP channel (client mode - connects to outstation)
 	tcpConfig := channel.TCPChannelConfig{
 		Address:        "127.0.0.1:20000", // Connect to outstation
-		IsServer:       false,              // Client mode
+		IsServer:       false,             // Client mode
 		ReconnectDelay: 5 * time.Second,
 		ReadTimeout:    30 * time.Second,
 		WriteTimeout:   10 * time.Second,
@@ -166,7 +168,7 @@ func main() {
 	// Configure master
 	masterConfig := dnp3.DefaultMasterConfig()
 	masterConfig.ID = "master1"
-	masterConfig.LocalAddress = 1  // Master address
+	masterConfig.LocalAddress = 1   // Master address
 	masterConfig.RemoteAddress = 10 // Outstation address
 	masterConfig.ResponseTimeout = 5 * time.Second
 

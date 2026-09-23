@@ -4,8 +4,8 @@ import (
 	"errors"
 	"time"
 
-	"avaneesh/dnp3-go/pkg/app"
-	"avaneesh/dnp3-go/pkg/types"
+	"github.com/lihongjie0209/dnp3-go/pkg/app"
+	"github.com/lihongjie0209/dnp3-go/pkg/types"
 )
 
 var ErrNotImplemented = errors.New("not yet implemented")
@@ -67,17 +67,17 @@ type SOEHandler interface {
 
 // ResponseInfo contains information about a response fragment
 type ResponseInfo struct {
-	Unsolicited bool      // True if unsolicited response
-	FIR         bool      // First fragment
-	FIN         bool      // Final fragment
+	Unsolicited bool // True if unsolicited response
+	FIR         bool // First fragment
+	FIN         bool // Final fragment
 }
 
 // HeaderInfo contains information about an object header
 type HeaderInfo struct {
-	Group     uint8  // Object group
-	Variation uint8  // Object variation
-	Qualifier uint8  // Qualifier code
-	IsEvent   bool   // True if event data
+	Group     uint8 // Object group
+	Variation uint8 // Object variation
+	Qualifier uint8 // Qualifier code
+	IsEvent   bool  // True if event data
 }
 
 // ScanHandle allows control of periodic scans
@@ -120,10 +120,10 @@ type MasterConfig struct {
 	TaskStartTimeout time.Duration // Default: 10s
 
 	// Behavior
-	DisableUnsolOnStartup bool             // Disable unsolicited on startup
-	IgnoreRestartIIN      bool             // Ignore restart IIN bit
-	UnsolClassMask        app.ClassField   // Classes to accept unsolicited
-	StartupIntegrityScan  bool             // Perform integrity scan on startup
+	DisableUnsolOnStartup bool           // Disable unsolicited on startup
+	IgnoreRestartIIN      bool           // Ignore restart IIN bit
+	UnsolClassMask        app.ClassField // Classes to accept unsolicited
+	StartupIntegrityScan  bool           // Perform integrity scan on startup
 
 	// Timing
 	IntegrityPeriod time.Duration // 0 = no automatic integrity scans

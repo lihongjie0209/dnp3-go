@@ -1,8 +1,8 @@
 package app
 
 import (
-	"avaneesh/dnp3-go/pkg/types"
 	"bytes"
+	"github.com/lihongjie0209/dnp3-go/pkg/types"
 	"testing"
 )
 

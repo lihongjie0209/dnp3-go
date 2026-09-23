@@ -1,7 +1,7 @@
 package dnp3
 
 import (
-	"avaneesh/dnp3-go/pkg/internal/logger"
+	"github.com/lihongjie0209/dnp3-go/pkg/internal/logger"
 )
 
 // LogLevel represents logging level

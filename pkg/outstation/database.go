@@ -4,7 +4,7 @@ import (
 	"math"
 	"sync"
 
-	"avaneesh/dnp3-go/pkg/types"
+	"github.com/lihongjie0209/dnp3-go/pkg/types"
 )
 
 // Database stores measurement points and generates events

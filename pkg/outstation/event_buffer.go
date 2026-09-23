@@ -4,7 +4,7 @@ import (
 	"container/list"
 	"sync"
 
-	"avaneesh/dnp3-go/pkg/types"
+	"github.com/lihongjie0209/dnp3-go/pkg/types"
 )
 
 // EventBuffer manages event storage per class

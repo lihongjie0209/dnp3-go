@@ -4,13 +4,13 @@ import (
 	"fmt"
 	"time"
 
-	"avaneesh/dnp3-go/pkg/channel"
-	"avaneesh/dnp3-go/pkg/dnp3"
+	"github.com/lihongjie0209/dnp3-go/pkg/channel"
+	"github.com/lihongjie0209/dnp3-go/pkg/dnp3"
 )
 
 // Example demonstrating QUIC channel usage with DNP3
 func main() {
-	fmt.Println("=== QUIC Channel Example ===\n")
+	fmt.Println("=== QUIC Channel Example ===")
 
 	// Example 1: QUIC Server
 	fmt.Println("Example 1: QUIC Server (Outstation)")
